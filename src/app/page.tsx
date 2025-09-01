@@ -1,19 +1,23 @@
-
 'use client';
 import Image from 'next/image';
 import { useEffect, useRef, useState, useCallback } from 'react';
+import NeonParallaxBackground from '@/components/NeonParallaxBackground';
+import { TypeAnimation } from 'react-type-animation';
+import { useInView } from 'react-intersection-observer';
 
 const COLORS = {
-  primary: "#007AAD",      // blue
-  secondary: "#D9E2E9",   // light gray-blue
-  accent: "#FFFBFC",      // off-white
-  dark1: "#0C1D32",       // dark navy
-  dark2: "#D9E2E9",       // use as light section bg
-  card1: "#FFFFFF",       // white for card bg
-  card2: "#F5F8FA",       // very light gray for card bg
-  card3: "#D9E2E9",       // light gray-blue for card bg
-  highlight: "#007AAD",   // blue for highlights
-  button: "#007AAD",      // blue for buttons
+  primary: "#418BE6",      // neon blue
+  secondary: "#1A1A1A",   // slightly lighter than black
+  accent: "#E4002B",      // neon red
+  dark1: "#000000",       // pure black
+  dark2: "#111111",       // slightly lighter black
+  card1: "#1A1A1A",       // dark card bg
+  card2: "#222222",       // slightly lighter card bg
+  card3: "#2A2A2A",       // lightest card bg
+  highlight: "#418BE6",   // neon blue for highlights
+  button: "#418BE6",      // neon blue for buttons
+  text: "#FFFFFF",        // white text
+  textMuted: "#CCCCCC"    // muted text
 };
 
 const services = [
@@ -72,12 +76,28 @@ function Carousel() {
           {services.map((s, i) => (
             <div
               key={i}
-              className="flex-shrink-0 min-w-full px-6 py-10 flex flex-col items-center text-center gap-4 shadow-lg"
-              style={{ background: s.color, minHeight: 260, borderRadius: 24, boxShadow: '0 4px 24px 0 rgba(12,29,50,0.08)' }}
+              className="flex-shrink-0 min-w-full px-6 py-10 flex flex-col items-center text-center gap-4 hover:transform hover:-translate-y-2 hover:shadow-[0_8px_32px_0_rgba(65,139,230,0.2),0_0_0_2px_rgba(65,139,230,0.2)]"
+              style={{ 
+                background: COLORS.card1,
+                minHeight: 260,
+                borderRadius: 24,
+                boxShadow: `0 4px 24px 0 rgba(65,139,230,0.1), 0 0 0 1px rgba(65,139,230,0.1)`,
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+              }}
             >
-              <Image src={s.icon} alt={s.title} width={48} height={48} />
-              <h4 className="text-xl font-semibold text-[#0C1D32] tracking-wide">{s.title}</h4>
-              <p className="text-[#0C1D32]/80 text-base max-w-xs">{s.desc}</p>
+              <div style={{ 
+                filter: `drop-shadow(0 0 8px ${COLORS.primary}66)`,
+                transition: 'filter 0.3s ease'
+               }}>
+                <Image src={s.icon} alt={s.title} width={48} height={48} 
+                  style={{ filter: 'brightness(0) invert(1)' }}
+                />
+              </div>
+              <h4 className="text-xl font-semibold tracking-wide" style={{ 
+                color: COLORS.text,
+                textShadow: `0 0 10px ${COLORS.primary}33`
+              }}>{s.title}</h4>
+              <p className="text-base max-w-xs" style={{ color: COLORS.textMuted }}>{s.desc}</p>
             </div>
           ))}
         </div>
@@ -86,16 +106,26 @@ function Carousel() {
       <button
         aria-label="Previous"
         onClick={prev}
-  className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#FFF] hover:bg-[#D9E2E9] text-[#007AAD] rounded-full p-2 transition border-2 border-[#007AAD]"
+        className="absolute left-2 top-1/2 -translate-y-1/2 bg-transparent text-[#418BE6] rounded-full p-2 transition-all duration-300 border-2 border-[#418BE6] hover:bg-[#418BE6]/10"
+        style={{
+          boxShadow: '0 0 10px rgba(65,139,230,0.3)',
+        }}
       >
-        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 19l-7-7 7-7" /></svg>
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" style={{
+          filter: 'drop-shadow(0 0 3px #418BE6)'
+        }}><path d="M15 19l-7-7 7-7" /></svg>
       </button>
       <button
         aria-label="Next"
         onClick={next}
-  className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#FFF] hover:bg-[#D9E2E9] text-[#007AAD] rounded-full p-2 transition border-2 border-[#007AAD]"
+        className="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent text-[#418BE6] rounded-full p-2 transition-all duration-300 border-2 border-[#418BE6] hover:bg-[#418BE6]/10"
+        style={{
+          boxShadow: '0 0 10px rgba(65,139,230,0.3)',
+        }}
       >
-        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 5l7 7-7 7" /></svg>
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" style={{
+          filter: 'drop-shadow(0 0 3px #418BE6)'
+        }}><path d="M9 5l7 7-7 7" /></svg>
       </button>
       {/* Dots */}
       <div className="flex justify-center gap-2 mt-4">
@@ -104,28 +134,36 @@ function Carousel() {
             key={i}
             aria-label={`Go to slide ${i + 1}`}
             onClick={() => goTo(i)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${current === i ? 'bg-[#007AAD]' : 'bg-[#D9E2E9]'}`}
-            style={{ border: '1.5px solid #007AAD' }}
+            className={`w-3 h-3 rounded-full transition-all duration-300`}
+            style={{ 
+              background: current === i ? COLORS.primary : 'transparent',
+              border: `1.5px solid ${COLORS.primary}`,
+              boxShadow: current === i ? `0 0 10px ${COLORS.primary}` : 'none'
+            }}
           />
         ))}
       </div>
-    </div>
+        </div>
   );
 }
 
 const PROJECT_PLACEHOLDERS = [
-  "https://placehold.co/600x400/0C1D32/FFF?text=1",
-  "https://placehold.co/300x180/007AAD/FFF?text=2",
-  "https://placehold.co/300x180/007AAD/FFF?text=3",
-  "https://placehold.co/300x180/007AAD/FFF?text=4",
-  "https://placehold.co/300x180/007AAD/FFF?text=5",
-  "https://placehold.co/300x180/007AAD/FFF?text=6",
-  "https://placehold.co/300x180/007AAD/FFF?text=7",
-  "https://placehold.co/300x180/007AAD/FFF?text=8",
-  "https://placehold.co/300x180/007AAD/FFF?text=9",
+  "https://placehold.co/600x400/000000/418BE6?text=1",
+  "https://placehold.co/300x180/000000/418BE6?text=2",
+  "https://placehold.co/300x180/000000/418BE6?text=3",
+  "https://placehold.co/300x180/000000/418BE6?text=4",
+  "https://placehold.co/300x180/000000/418BE6?text=5",
+  "https://placehold.co/300x180/000000/418BE6?text=6",
+  "https://placehold.co/300x180/000000/418BE6?text=7",
+  "https://placehold.co/300x180/000000/418BE6?text=8",
+  "https://placehold.co/300x180/000000/418BE6?text=9",
 ];
 
-const NEON = "#007AAD";
+const NEON = {
+  primary: "#418BE6",
+  accent: "#E4002B",
+  glow: "0 0 20px"
+};
 
 function RecentProjectsCarousel() {
   const [order, setOrder] = useState([0,1,2,3,4,5,6,7,8]);
@@ -173,7 +211,7 @@ function RecentProjectsCarousel() {
       {row:3,col:1,span:1,style:{gridRow:'3/4',gridColumn:'1/2'}},
       {row:3,col:2,span:1,style:{gridRow:'3/4',gridColumn:'2/3'}},
       {row:3,col:3,span:1,style:{gridRow:'3/4',gridColumn:'3/4'}},
-      {row:3,col:4,span:1,style:{gridRow:'3/4',gridColumn:'4/5'}},
+      {row:3,col:4,span:1,style: {gridRow:'3/4',gridColumn:'4/5'}},
     ]);
   }, []);
 
@@ -236,21 +274,60 @@ function RecentProjectsCarousel() {
   );
 }
 
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+
 export default function Home() {
+  const [ref, inView] = useInView({ triggerOnce: false, threshold: 0.3 });
+  const [key, setKey] = useState(0);
+  useEffect(() => {
+    if (inView) setKey(prev => prev + 1);
+  }, [inView]);
+
   return (
     <div className="font-sans min-h-screen" style={{ background: COLORS.dark1 }}>
+      <NeonParallaxBackground />
+      <Header />
       {/* Hero Section */}
-      <header
+      <section id="home"
+        ref={ref}
         className="w-full flex flex-col items-center justify-center text-center relative py-16 md:py-24"
         style={{
-          background: `linear-gradient(180deg, ${COLORS.primary} 0%, ${COLORS.dark1} 100%)`,
+          background: COLORS.dark1,
+          boxShadow: `0 0 40px rgba(65, 139, 230, 0.1)`,
         }}
       >
-        <div className="max-w-4xl w-full px-6">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 tracking-tight text-[#FFFBFC]">
-            Hi, I am <span style={{ color: COLORS.primary }}>Clarence Xavier G. Escoto</span>
+        <div className="max-w-5xl w-full px-4 md:px-6 overflow-hidden">
+          <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-bold mb-4 tracking-tight text-white whitespace-nowrap"
+              style={{
+                textShadow: `0 0 10px ${COLORS.primary}, 0 0 20px ${COLORS.primary}33`,
+                transition: 'text-shadow 0.3s ease-in-out',
+                maxWidth: '100%'
+              }}>
+            Hi, I am{' '}
+            <span style={{ 
+              color: COLORS.primary, 
+              textShadow: `0 0 10px ${COLORS.primary}, 0 0 20px ${COLORS.primary}66`,
+              display: 'inline-block'
+            }}>
+              <TypeAnimation
+                key={key}
+                sequence={['Clarence Xavier G. Escoto', 1200, '', 500]}
+                speed={80}
+                deletionSpeed={40}
+                repeat={Infinity}
+                cursor={true}
+                style={{ 
+                  display: 'inline-block', 
+                  fontWeight: 'bold', 
+                  fontSize: 'inherit', 
+                  color: COLORS.primary 
+                }}
+              />
+            </span>
           </h1>
-          <p className="text-lg sm:text-xl mb-6 text-[#D9E2E9]">
+          <p className="text-lg sm:text-xl mb-6 text-[#CCCCCC] leading-relaxed"
+             style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>
             I am a frontend developer. I can provide clean code and pixel perfect design.<br />
             I also make websites more interactive with web animations.
           </p>
@@ -275,12 +352,16 @@ export default function Home() {
             </a>
           </div>
         </div>
-      </header>
+      </section>
 
       {/* About Section */}
-      <section className="w-full py-16 px-4" style={{ background: COLORS.secondary }}>
+      <section id="about" className="w-full py-16 px-4" style={{ background: COLORS.dark2 }}>
         <div className="max-w-4xl w-full mx-auto flex flex-col md:flex-row gap-10 items-center md:items-start">
-          <div className="flex-shrink-0 rounded-2xl overflow-hidden shadow-lg bg-white">
+          <div className="flex-shrink-0 rounded-2xl overflow-hidden shadow-lg" 
+               style={{ 
+                 background: COLORS.dark1,
+                 boxShadow: `0 0 30px ${COLORS.primary}33`
+               }}>
             <div className="w-56 h-64 flex items-center justify-center">
               <Image
                 src="/assets/ESCOTO_5R.png"
@@ -288,15 +369,27 @@ export default function Home() {
                 width={170}
                 height={170}
                 className="rounded-xl object-cover"
+                style={{
+                  border: `2px solid ${COLORS.primary}33`,
+                  boxShadow: `0 0 20px ${COLORS.primary}33`
+                }}
               />
             </div>
           </div>
-          <div className="flex-1 text-[#0C1D32]">
-            <h2 className="text-2xl font-bold mb-2" style={{ color: COLORS.primary }}>ABOUT ME</h2>
-            <div className="bg-[#FFFBFC] rounded-lg p-6 mb-4">
-              <h3 className="text-xl font-semibold mb-1">Hi There! I'm Clarence Xavier G. Escoto</h3>
+          <div className="flex-1 text-white">
+            <h2 className="text-2xl font-bold mb-2" 
+                style={{ 
+                  color: COLORS.primary,
+                  textShadow: `0 0 10px ${COLORS.primary}66`
+                }}>ABOUT ME</h2>
+            <div className="rounded-lg p-6 mb-4" 
+                 style={{ 
+                   background: COLORS.card1,
+                   boxShadow: `0 0 30px ${COLORS.primary}22, 0 0 0 1px ${COLORS.primary}33`
+                 }}>
+              <h3 className="text-xl font-semibold mb-1 text-white">Hi There! I'm Clarence Xavier G. Escoto</h3>
               <p className="mb-4" style={{ color: COLORS.primary }}>Visual Designer</p>
-              <p className="mb-4">
+              <p className="mb-4 text-[#CCCCCC]">
                 I am a Visual Designer with a strong focus on digital branding. Visual design helps to express, attract, 
                 create emotion and convince people to engage with brands, always leaving a fantastic impact.
               </p>
@@ -309,15 +402,18 @@ export default function Home() {
                   ['Language', 'English, Filipino'],
                   ['Freelance', 'Available'],
                 ].map(([label, value]) => (
-                  <li key={label}>
+                  <li key={label} className="text-[#CCCCCC]">
                     <span className="font-semibold" style={{ color: COLORS.primary }}>{label}:</span> {value}
                   </li>
                 ))}
               </ul>
               <a
                 href="#"
-                className="inline-block px-6 py-2 rounded-full font-semibold text-white"
-                style={{ background: COLORS.primary }}
+                className="inline-block px-6 py-2 rounded-full font-semibold text-white transition-all duration-300 hover:transform hover:-translate-y-0.5"
+                style={{ 
+                  background: COLORS.primary,
+                  boxShadow: `0 0 20px ${COLORS.primary}66`,
+                }}
               >
                 Download CV
               </a>
@@ -327,22 +423,34 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section className="w-full py-16 px-4" style={{ background: COLORS.dark1 }}>
+      <section id="services" className="w-full py-16 px-4" style={{ background: COLORS.dark1 }}>
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold mb-8 text-center" style={{ color: COLORS.primary }}>SERVICES</h2>
+          <h2 className="text-2xl font-bold mb-8 text-center tracking-wide"
+              style={{ 
+                color: COLORS.primary,
+                textShadow: `0 0 10px ${COLORS.primary}66`
+              }}>SERVICES</h2>
           <Carousel />
         </div>
       </section>
 
       {/* Recent Projects Section */}
-      <section className="w-full py-16 px-4" style={{ background: COLORS.secondary }}>
+      <section id="projects" className="w-full py-16 px-4" style={{ background: COLORS.dark2 }}>
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl font-bold mb-10 text-center" style={{ color: COLORS.primary, letterSpacing: 2 }}>
+          <h2 className="text-3xl font-bold mb-10 text-center tracking-wider"
+              style={{ 
+                color: COLORS.primary,
+                textShadow: `0 0 15px ${COLORS.primary}66`,
+                letterSpacing: '0.15em'
+              }}>
             RECENT PROJECTS
           </h2>
-          <RecentProjectsCarousel />
+                    <RecentProjectsCarousel />
         </div>
       </section>
-    </div>
-  );
-}
+
+      {/* Footer */}
+          <Footer />
+        </div>
+      );
+    }
