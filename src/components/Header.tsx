@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 // Color constants from your theme
 const COLORS = {
   primary: "#418BE6",      // neon blue
+  accent: "#E4002B",      // neon red
   dark1: "#000000",       // pure black
   dark2: "#111111",       // slightly lighter black
   text: "#FFFFFF",        // white text
@@ -63,26 +64,53 @@ export default function Header() {
             <button
               key={item}
               onClick={() => scrollToSection(item.toLowerCase())}
-              className="text-white/90 hover:text-white transition-all duration-300 relative group"
+              className="text-white/90 hover:text-[#E4002B] transition-all duration-300 relative group"
+              style={{
+                textShadow: '0 0 0 transparent',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.color = '#E4002B';
+                e.currentTarget.style.textShadow = '0 0 10px #E4002B, 0 0 20px #E4002B66';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.color = 'rgba(255,255,255,0.9)';
+                e.currentTarget.style.textShadow = '0 0 0 transparent';
+              }}
             >
               {item}
               <span 
-                className="absolute bottom-0 left-0 w-0 h-0.5 bg-current transition-all duration-300 group-hover:w-full"
-                style={{ boxShadow: `0 0 10px ${COLORS.primary}` }}
+                className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#E4002B] transition-all duration-300 group-hover:w-full"
+                style={{ boxShadow: `0 0 10px #E4002B` }}
               />
             </button>
           ))}
-          <a
-            href="#contact"
-            className="px-4 py-2 rounded-full text-white transition-all duration-300
-                     hover:scale-105 hover:shadow-lg"
+          <button
+            onClick={() => {
+              scrollToSection('contact');
+              setIsMenuOpen(false);
+            }}
+            className="px-4 py-2 rounded-full text-white transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-transparent hover:text-[#E4002B] border-2 border-transparent hover:border-[#E4002B]"
             style={{
               background: COLORS.primary,
               boxShadow: `0 0 20px ${COLORS.primary}33`,
             }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.borderColor = '#E4002B';
+              e.currentTarget.style.color = '#E4002B';
+              e.currentTarget.style.textShadow = '0 0 10px #E4002B';
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(228,0,43,0.6)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = COLORS.primary;
+              e.currentTarget.style.borderColor = 'transparent';
+              e.currentTarget.style.color = 'white';
+              e.currentTarget.style.textShadow = 'none';
+              e.currentTarget.style.boxShadow = `0 0 20px ${COLORS.primary}33`;
+            }}
           >
             Contact Us
-          </a>
+          </button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -119,22 +147,49 @@ export default function Header() {
             <button
               key={item}
               onClick={() => scrollToSection(item.toLowerCase())}
-              className="text-white/90 hover:text-white py-2 px-4 transition-colors duration-300 text-left"
+              className="text-white/90 hover:text-[#E4002B] py-2 px-4 transition-all duration-300 text-left"
+              style={{
+                textShadow: '0 0 0 transparent',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.color = '#E4002B';
+                e.currentTarget.style.textShadow = '0 0 10px #E4002B, 0 0 20px #E4002B66';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.color = 'rgba(255,255,255,0.9)';
+                e.currentTarget.style.textShadow = '0 0 0 transparent';
+              }}
             >
               {item}
             </button>
           ))}
-          <a
-            href="#contact"
-            className="px-4 py-2 rounded-full text-white text-center transition-all duration-300
-                     hover:scale-105 hover:shadow-lg"
+          <button
+            onClick={() => {
+              scrollToSection('contact');
+              setIsMenuOpen(false);
+            }}
+            className="px-4 py-2 rounded-full text-white text-center transition-all duration-300 hover:scale-105 hover:shadow-lg w-full hover:bg-transparent hover:text-[#E4002B] border-2 border-transparent hover:border-[#E4002B]"
             style={{
               background: COLORS.primary,
               boxShadow: `0 0 20px ${COLORS.primary}33`,
             }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.borderColor = '#E4002B';
+              e.currentTarget.style.color = '#E4002B';
+              e.currentTarget.style.textShadow = '0 0 10px #E4002B';
+              e.currentTarget.style.boxShadow = '0 0 20px rgba(228,0,43,0.6)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = COLORS.primary;
+              e.currentTarget.style.borderColor = 'transparent';
+              e.currentTarget.style.color = 'white';
+              e.currentTarget.style.textShadow = 'none';
+              e.currentTarget.style.boxShadow = `0 0 20px ${COLORS.primary}33`;
+            }}
           >
             Contact Us
-          </a>
+          </button>
         </div>
       </div>
     </header>

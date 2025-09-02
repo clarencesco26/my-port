@@ -29,8 +29,8 @@ const services = [
   },
   {
     icon: "/window.svg",
-    title: "Product Design",
-    desc: "End-to-end product design, from concept to launch, with a focus on usability.",
+    title: "Website Building",
+    desc: "We craft beautiful, functional websites from the ground up, ensuring a seamless and impactful online presence for your business.",
     color: COLORS.card1,
   },
   {
@@ -76,7 +76,7 @@ function Carousel() {
           {services.map((s, i) => (
             <div
               key={i}
-              className="flex-shrink-0 min-w-full px-6 py-10 flex flex-col items-center text-center gap-4 hover:transform hover:-translate-y-2 hover:shadow-[0_8px_32px_0_rgba(65,139,230,0.2),0_0_0_2px_rgba(65,139,230,0.2)]"
+              className="flex-shrink-0 min-w-full px-6 py-10 flex flex-col items-center text-center gap-4"
               style={{ 
                 background: COLORS.card1,
                 minHeight: 260,
@@ -102,30 +102,46 @@ function Carousel() {
           ))}
         </div>
       </div>
-      {/* Arrows */}
+      {/* Arrows with neon red hover effect */}
       <button
         aria-label="Previous"
         onClick={prev}
-        className="absolute left-2 top-1/2 -translate-y-1/2 bg-transparent text-[#418BE6] rounded-full p-2 transition-all duration-300 border-2 border-[#418BE6] hover:bg-[#418BE6]/10"
+        className="group absolute left-2 top-1/2 -translate-y-1/2 bg-transparent text-[#418BE6] rounded-full p-2 transition-all duration-300 border-2 border-[#418BE6] hover:bg-transparent hover:border-[#E4002B] hover:text-[#E4002B]"
         style={{
           boxShadow: '0 0 10px rgba(65,139,230,0.3)',
         }}
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = '0 0 15px rgba(228,0,43,0.6)';
+          e.currentTarget.style.textShadow = '0 0 10px #E4002B';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = '0 0 10px rgba(65,139,230,0.3)';
+          e.currentTarget.style.textShadow = 'none';
+        }}
       >
-        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" style={{
-          filter: 'drop-shadow(0 0 3px #418BE6)'
-        }}><path d="M15 19l-7-7 7-7" /></svg>
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:drop-shadow-[0_0_3px_#E4002B] transition-all duration-300">
+          <path d="M15 19l-7-7 7-7" />
+        </svg>
       </button>
       <button
         aria-label="Next"
         onClick={next}
-        className="absolute right-2 top-1/2 -translate-y-1/2 bg-transparent text-[#418BE6] rounded-full p-2 transition-all duration-300 border-2 border-[#418BE6] hover:bg-[#418BE6]/10"
+        className="group absolute right-2 top-1/2 -translate-y-1/2 bg-transparent text-[#418BE6] rounded-full p-2 transition-all duration-300 border-2 border-[#418BE6] hover:bg-transparent hover:border-[#E4002B] hover:text-[#E4002B]"
         style={{
           boxShadow: '0 0 10px rgba(65,139,230,0.3)',
         }}
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = '0 0 15px rgba(228,0,43,0.6)';
+          e.currentTarget.style.textShadow = '0 0 10px #E4002B';
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = '0 0 10px rgba(65,139,230,0.3)';
+          e.currentTarget.style.textShadow = 'none';
+        }}
       >
-        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" style={{
-          filter: 'drop-shadow(0 0 3px #418BE6)'
-        }}><path d="M9 5l7 7-7 7" /></svg>
+        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" className="group-hover:drop-shadow-[0_0_3px_#E4002B] transition-all duration-300">
+          <path d="M9 5l7 7-7 7" />
+        </svg>
       </button>
       {/* Dots */}
       <div className="flex justify-center gap-2 mt-4">
@@ -240,7 +256,7 @@ function RecentProjectsCarousel() {
           ...g.style,
           transition,
           zIndex: idx === 0 ? 2 : 1,
-          boxShadow: hovered === idx ? `0 0 0 4px ${NEON}, 0 0 16px 2px ${NEON}` : '0 2px 16px 0 #0C1D3222',
+          boxShadow: hovered === idx ? `0 0 0 4px ${NEON.primary}, 0 0 16px 2px ${NEON.primary}` : '0 2px 16px 0 #0C1D3222',
           cursor: 'pointer',
         };
         if (animating && idx === 0) style.transform = 'scale(0.95)';
@@ -313,8 +329,8 @@ export default function Home() {
               <TypeAnimation
                 key={key}
                 sequence={['Clarence Xavier G. Escoto', 1200, '', 500]}
-                speed={80}
-                deletionSpeed={40}
+                speed={50}
+                deletionSpeed={50}
                 repeat={Infinity}
                 cursor={true}
                 style={{ 
@@ -388,10 +404,9 @@ export default function Home() {
                    boxShadow: `0 0 30px ${COLORS.primary}22, 0 0 0 1px ${COLORS.primary}33`
                  }}>
               <h3 className="text-xl font-semibold mb-1 text-white">Hi There! I'm Clarence Xavier G. Escoto</h3>
-              <p className="mb-4" style={{ color: COLORS.primary }}>Visual Designer</p>
+              <p className="mb-4" style={{ color: COLORS.primary }}>Front-End Developer</p>
               <p className="mb-4 text-[#CCCCCC]">
-                I am a Visual Designer with a strong focus on digital branding. Visual design helps to express, attract, 
-                create emotion and convince people to engage with brands, always leaving a fantastic impact.
+                I am a Front-End Developer with a strong focus on building seamless, user-friendly digital experiences. I combine creativity and code to craft interfaces that not only look great but also engage users and leave a lasting impact.
               </p>
               <ul className="text-sm grid grid-cols-2 gap-x-6 gap-y-1 mb-4">
                 {[
@@ -409,10 +424,24 @@ export default function Home() {
               </ul>
               <a
                 href="#"
-                className="inline-block px-6 py-2 rounded-full font-semibold text-white transition-all duration-300 hover:transform hover:-translate-y-0.5"
+                className="inline-block px-6 py-2 rounded-full font-semibold text-white transition-all duration-300 hover:transform hover:-translate-y-0.5 hover:bg-transparent hover:text-[#E4002B] border-2 border-transparent hover:border-[#E4002B]"
                 style={{ 
                   background: COLORS.primary,
                   boxShadow: `0 0 20px ${COLORS.primary}66`,
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.borderColor = '#E4002B';
+                  e.currentTarget.style.color = '#E4002B';
+                  e.currentTarget.style.textShadow = '0 0 10px #E4002B';
+                  e.currentTarget.style.boxShadow = '0 0 20px rgba(228,0,43,0.6)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = COLORS.primary;
+                  e.currentTarget.style.borderColor = 'transparent';
+                  e.currentTarget.style.color = 'white';
+                  e.currentTarget.style.textShadow = 'none';
+                  e.currentTarget.style.boxShadow = `0 0 20px ${COLORS.primary}66`;
                 }}
               >
                 Download CV
@@ -445,12 +474,12 @@ export default function Home() {
               }}>
             RECENT PROJECTS
           </h2>
-                    <RecentProjectsCarousel />
+          <RecentProjectsCarousel />
         </div>
       </section>
 
       {/* Footer */}
-          <Footer />
-        </div>
-      );
-    }
+      <Footer />
+    </div>
+  );
+}
