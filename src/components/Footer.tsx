@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 // Color constants to match your theme
 const COLORS = {
@@ -24,6 +24,11 @@ const Footer: FC<FooterProps> = () => {
   };
 
   const navLinks = ['Home', 'About', 'Services', 'Projects'];
+  const [year, setYear] = useState<number | null>(null);
+
+  useEffect(() => {
+    setYear(new Date().getFullYear());
+  }, []);
   
   return (
     <footer id="contact" className="w-full pt-16 pb-8"
@@ -94,14 +99,19 @@ const Footer: FC<FooterProps> = () => {
                     style={{
                       color: COLORS.primary,
                       textShadow: `0 0 10px ${COLORS.primary}66`,
+                      textDecoration: 'none',
                     }}
                     onMouseEnter={e => {
                       e.currentTarget.style.color = '#E4002B';
                       e.currentTarget.style.textShadow = '0 0 10px #E4002B, 0 0 20px #E4002B66';
+                      e.currentTarget.style.textDecoration = 'underline';
+                      e.currentTarget.style.textDecorationColor = '#E4002B';
+                      e.currentTarget.style.textDecorationThickness = '2px';
                     }}
                     onMouseLeave={e => {
                       e.currentTarget.style.color = COLORS.primary;
                       e.currentTarget.style.textShadow = `0 0 10px ${COLORS.primary}66`;
+                      e.currentTarget.style.textDecoration = 'none';
                     }}
                   >
                     <span className="relative">
@@ -121,14 +131,19 @@ const Footer: FC<FooterProps> = () => {
                     style={{
                       color: COLORS.primary,
                       textShadow: `0 0 10px ${COLORS.primary}66`,
+                      textDecoration: 'none',
                     }}
                     onMouseEnter={e => {
                       e.currentTarget.style.color = '#E4002B';
                       e.currentTarget.style.textShadow = '0 0 10px #E4002B, 0 0 20px #E4002B66';
+                      e.currentTarget.style.textDecoration = 'underline';
+                      e.currentTarget.style.textDecorationColor = '#E4002B';
+                      e.currentTarget.style.textDecorationThickness = '2px';
                     }}
                     onMouseLeave={e => {
                       e.currentTarget.style.color = COLORS.primary;
                       e.currentTarget.style.textShadow = `0 0 10px ${COLORS.primary}66`;
+                      e.currentTarget.style.textDecoration = 'none';
                     }}
                   >
                     <span className="relative">
@@ -213,7 +228,7 @@ const Footer: FC<FooterProps> = () => {
         {/* Copyright */}
         <div className="pt-8 mt-8 border-t border-white/10">
           <p className="text-center text-sm text-[#CCCCCC]">
-            © {new Date().getFullYear()} Clarence Xavier G. Escoto. All rights reserved.
+            © {year ?? '2025'} Clarence Xavier G. Escoto. All rights reserved.
           </p>
         </div>
       </div>

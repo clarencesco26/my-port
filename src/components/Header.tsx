@@ -26,12 +26,84 @@ export default function Header() {
 
   // Smooth scroll function
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+    const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 768;
+
+    const doScroll = () => {
+      if (sectionId === 'home') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+      }
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    if (isMobileViewport && isMenuOpen) {
+      // Close menu first so body scroll is restored, then scroll
+      setIsMenuOpen(false);
+      // wait a tick for the effect to restore scroll position, then animate
+      setTimeout(() => {
+        doScroll();
+      }, 60);
+    } else {
+      doScroll();
+      // ensure the mobile menu closes if called programmatically
       setIsMenuOpen(false);
     }
   };
+
+  // lock body scroll when mobile menu is open while preserving current scroll position
+  useEffect(() => {
+    let scrollY = 0;
+    if (isMenuOpen) {
+      scrollY = window.scrollY || document.documentElement.scrollTop;
+      // lock body in place
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+    } else {
+      // restore
+      const top = document.body.style.top;
+      if (top) {
+        const prevScroll = -parseInt(top || '0', 10) || 0;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, prevScroll);
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+    return () => {
+      // cleanup in case component unmounts while menu open
+      const top = document.body.style.top;
+      if (top) {
+        const prevScroll = -parseInt(top || '0', 10) || 0;
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.left = '';
+        document.body.style.right = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, prevScroll);
+      } else {
+        document.body.style.overflow = '';
+      }
+    };
+  }, [isMenuOpen]);
+
+  // close on ESC key
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsMenuOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
 
   return (
     <header
@@ -115,9 +187,12 @@ export default function Header() {
 
         {/* Mobile Menu Button */}
         <button
+          type="button"
           className="md:hidden text-white p-2 focus:outline-none"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          onClick={(e) => { e.stopPropagation(); setIsMenuOpen(prev => !prev); }}
           aria-label="Toggle menu"
+          aria-expanded={isMenuOpen}
+          aria-controls="mobile-menu"
         >
           <div className="w-6 h-5 relative flex flex-col justify-between">
             <span className={`w-full h-0.5 bg-white transition-all duration-300 ${
@@ -135,62 +210,46 @@ export default function Header() {
 
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed inset-x-0 bg-black/95 backdrop-blur-md transition-all duration-300 ${
-          isMenuOpen ? 'top-[calc(100%+0px)] opacity-100' : 'top-[-100%] opacity-0'
-        }`}
-        style={{
-          boxShadow: `0 10px 20px ${COLORS.primary}22`,
-        }}
+        id="mobile-menu-overlay"
+        className={`md:hidden fixed inset-0 z-50 transition-opacity duration-300 ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        style={{ background: '#000' }}
+        onClick={() => setIsMenuOpen(false)}
       >
-        <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-          {['Home', 'About', 'Services', 'Projects'].map((item) => (
-            <button
-              key={item}
-              onClick={() => scrollToSection(item.toLowerCase())}
-              className="text-white/90 hover:text-[#E4002B] py-2 px-4 transition-all duration-300 text-left"
-              style={{
-                textShadow: '0 0 0 transparent',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.color = '#E4002B';
-                e.currentTarget.style.textShadow = '0 0 10px #E4002B, 0 0 20px #E4002B66';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.color = 'rgba(255,255,255,0.9)';
-                e.currentTarget.style.textShadow = '0 0 0 transparent';
-              }}
-            >
-              {item}
-            </button>
-          ))}
-          <button
-            onClick={() => {
-              scrollToSection('contact');
-              setIsMenuOpen(false);
-            }}
-            className="px-4 py-2 rounded-full text-white text-center transition-all duration-300 hover:scale-105 hover:shadow-lg w-full hover:bg-transparent hover:text-[#E4002B] border-2 border-transparent hover:border-[#E4002B]"
-            style={{
-              background: COLORS.primary,
-              boxShadow: `0 0 20px ${COLORS.primary}33`,
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.background = 'transparent';
-              e.currentTarget.style.borderColor = '#E4002B';
-              e.currentTarget.style.color = '#E4002B';
-              e.currentTarget.style.textShadow = '0 0 10px #E4002B';
-              e.currentTarget.style.boxShadow = '0 0 20px rgba(228,0,43,0.6)';
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.background = COLORS.primary;
-              e.currentTarget.style.borderColor = 'transparent';
-              e.currentTarget.style.color = 'white';
-              e.currentTarget.style.textShadow = 'none';
-              e.currentTarget.style.boxShadow = `0 0 20px ${COLORS.primary}33`;
-            }}
-          >
-            Contact Us
-          </button>
-        </div>
+        <aside
+          id="mobile-menu"
+          className={`fixed left-0 top-0 h-full bg-[#0b0b0b] shadow-2xl transform transition-transform duration-300 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
+          style={{ width: 'min(85vw, 320px)' }}
+          onClick={e => e.stopPropagation()}
+          aria-hidden={!isMenuOpen}
+        >
+          <div className="relative h-full flex flex-col">
+            <button aria-label="Close menu" className="absolute right-3 top-3 text-white p-2" onClick={() => setIsMenuOpen(false)}>✕</button>
+            <div className="mt-12 px-4 flex-1 flex flex-col gap-4">
+              {['Home', 'About', 'Services', 'Projects'].map((item) => (
+                <button
+                  key={item}
+                  onClick={() => scrollToSection(item.toLowerCase())}
+                  className="text-white/90 hover:text-[#E4002B] py-2 px-4 transition-all duration-300 text-left"
+                  style={{ textShadow: '0 0 0 transparent' }}
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+            <div className="px-4 pb-8">
+              <button
+                onClick={() => {
+                  scrollToSection('contact');
+                  setIsMenuOpen(false);
+                }}
+                className="w-full px-4 py-2 rounded-full text-white text-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-transparent hover:text-[#E4002B] border-2 border-transparent hover:border-[#E4002B]"
+                style={{ background: COLORS.primary, boxShadow: `0 0 20px ${COLORS.primary}33` }}
+              >
+                Contact Us
+              </button>
+            </div>
+          </div>
+        </aside>
       </div>
     </header>
   );

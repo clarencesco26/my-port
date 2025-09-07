@@ -1,15 +1,22 @@
-import { useEffect, useRef } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+"use client";
+import { useEffect, useRef, useState } from 'react';
 
-// Neon color palette
+// Expanded neon color palette
 const NEON_COLORS = [
   '#41B6E6', // blue
   '#00FFC6', // cyan
-  '#E4002B', // pink/red
+  '#E4002B', // red
   '#A259FF', // purple
   '#00FF85', // green
   '#FF61F6', // magenta
+  '#FFD54F', // amber
+  '#7CFFFA', // aqua
+  '#FF7AD1', // pink
+  '#8AFF6B', // lime
 ];
+
+// Global speed multiplier: >1 = faster, <1 = slower
+const SPEED_MULTIPLIER = 1.6;
 
 // SVG icon definitions (outlined, neon-ready)
 const ICONS = [
@@ -25,47 +32,47 @@ const ICONS = [
   <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M32 28a6 6 0 00-6-6H14a6 6 0 100 12h12a6 6 0 006-6z"/><path d="M28 16a8 8 0 10-16 0"/></svg>,
   // Keyboard
   <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="14" width="28" height="12" rx="2"/><path d="M10 18h0M14 18h0M18 18h0M22 18h0M26 18h0M30 18h0M10 22h0M14 22h0M18 22h0M22 22h0M26 22h0M30 22h0"/></svg>,
+  // Mouse
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="14" y="6" width="12" height="24" rx="6"/><path d="M20 6v6"/></svg>,
+  // Chip
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="10" y="10" width="20" height="20" rx="3"/><path d="M4 18h4M4 22h4M32 18h4M32 22h4M18 4v4M22 4v4M18 32v4M22 32v4"/></svg>,
+  // Terminal
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="8" width="28" height="24" rx="2"/><path d="M12 18l4 4-4 4M20 26h8"/></svg>,
+  // Network
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="32" cy="8" r="3"/><circle cx="20" cy="28" r="3"/><path d="M9.8 10.2L20 24M30.2 10.2L20 24"/></svg>,
+  // USB
+  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6v12"/><circle cx="20" cy="22" r="2"/><path d="M18 16h4M20 28v6"/></svg>,
 ];
 
-// Generate random icon positions and properties
-const ICON_COUNT = 18;
-const ICONS_DATA = Array.from({ length: ICON_COUNT }).map((_, i) => {
-  const iconIdx = Math.floor(Math.random() * ICONS.length);
-  const colorIdx = Math.floor(Math.random() * NEON_COLORS.length);
-  return {
-    icon: ICONS[iconIdx],
-    color: NEON_COLORS[colorIdx],
-    top: Math.random() * 90, // vh
-    left: Math.random() * 95, // vw
-    size: 32 + Math.random() * 32, // px
-    speed: 0.2 + Math.random() * 0.8, // parallax speed
-    key: `${iconIdx}-${colorIdx}-${i}`,
-  };
-});
+// ICONS_DATA is generated client-side to avoid SSR/client mismatch
 
 const NeonParallaxBackground = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const controls = useAnimation();
 
+  // generate icons data on client only
+  const [iconsData, setIconsData] = useState<any[] | null>(null);
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      controls.start({
-        y: 0 // dummy to trigger rerender
-      });
-      if (containerRef.current) {
-        Array.from(containerRef.current.children).forEach((child, idx) => {
-          const icon = ICONS_DATA[idx];
-          const el = child as HTMLElement;
-          // Parallax: move icons at different speeds
-          const translateY = scrollY * icon.speed;
-          el.style.transform = `translateY(${translateY}px)`;
-        });
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [controls]);
+    const ICON_COUNT = 24;
+    const data = Array.from({ length: ICON_COUNT }).map((_, i) => {
+      const iconIdx = Math.floor(Math.random() * ICONS.length);
+      const colorIdx = Math.floor(Math.random() * NEON_COLORS.length);
+      const speed = 0.4 + Math.random() * 1.4; // affects duration
+      const baseDuration = 30 + Math.random() * 30; // seconds
+      const duration = Math.max(8, (baseDuration / speed) / SPEED_MULTIPLIER); // ensure not too fast
+      const delay = -Math.random() * duration; // negative delay to distribute positions
+      return {
+        icon: ICONS[iconIdx],
+        color: NEON_COLORS[colorIdx],
+        top: Math.random() * 110, // start beyond view for smoother loop
+        left: Math.random() * 98, // vw
+        size: 24 + Math.random() * 48, // px
+        duration,
+        delay,
+        key: `${iconIdx}-${colorIdx}-${i}`,
+      };
+    });
+    setIconsData(data);
+  }, []);
 
   return (
     <div
@@ -82,11 +89,16 @@ const NeonParallaxBackground = () => {
         mixBlendMode: 'screen',
       }}
     >
-      {ICONS_DATA.map((icon, idx) => (
-        <motion.div
+      <style>{`
+        @keyframes moveUp {
+          0% { transform: translateY(0); opacity: 1 }
+          95% { opacity: 1 }
+          100% { transform: translateY(-120vh); opacity: 0 }
+        }
+      `}</style>
+      {iconsData && iconsData.map((icon) => (
+        <div
           key={icon.key}
-          initial={false}
-          animate={controls}
           style={{
             position: 'absolute',
             top: `${icon.top}vh`,
@@ -95,13 +107,15 @@ const NeonParallaxBackground = () => {
             height: icon.size,
             color: icon.color,
             filter: `drop-shadow(0 0 8px ${icon.color}) drop-shadow(0 0 16px ${icon.color}99)`,
-            opacity: 0.9,
-            transition: 'filter 0.3s',
+            opacity: 0.95,
             zIndex: 0,
+            animation: `moveUp ${icon.duration}s linear infinite`,
+            animationDelay: `${icon.delay}s`,
+            willChange: 'transform, opacity',
           }}
         >
           {icon.icon}
-        </motion.div>
+        </div>
       ))}
     </div>
   );
