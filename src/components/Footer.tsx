@@ -12,9 +12,7 @@ const COLORS = {
   textMuted: "#CCCCCC",   // muted text
 };
 
-interface FooterProps {}
-
-const Footer: FC<FooterProps> = () => {
+const Footer: FC = () => {
   // Smooth scroll function
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);

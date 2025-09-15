@@ -21,36 +21,47 @@ const SPEED_MULTIPLIER = 1.6;
 // SVG icon definitions (outlined, neon-ready)
 const ICONS = [
   // Laptop
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="12" width="24" height="14" rx="2"/><path d="M2 32h36M10 26v2a2 2 0 002 2h16a2 2 0 002-2v-2"/></svg>,
+  <svg key="icon-laptop" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="8" y="12" width="24" height="14" rx="2"/><path d="M2 32h36M10 26v2a2 2 0 002 2h16a2 2 0 002-2v-2"/></svg>,
   // Server
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="8" width="28" height="8" rx="2"/><rect x="6" y="24" width="28" height="8" rx="2"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="28" r="1.5"/></svg>,
+  <svg key="icon-server" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="8" width="28" height="8" rx="2"/><rect x="6" y="24" width="28" height="8" rx="2"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="28" r="1.5"/></svg>,
   // Code brackets
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 10l-7 10 7 10"/><path d="M25 10l7 10-7 10"/></svg>,
+  <svg key="icon-code" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M15 10l-7 10 7 10"/><path d="M25 10l7 10-7 10"/></svg>,
   // Gears
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="20" cy="20" r="6"/><path d="M20 4v4M20 32v4M4 20h4M32 20h4M8.5 8.5l2.8 2.8M28.7 28.7l2.8 2.8M8.5 31.5l2.8-2.8M28.7 11.3l2.8-2.8"/></svg>,
+  <svg key="icon-gears" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="20" cy="20" r="6"/><path d="M20 4v4M20 32v4M4 20h4M32 20h4M8.5 8.5l2.8 2.8M28.7 28.7l2.8 2.8M8.5 31.5l2.8-2.8M28.7 11.3l2.8-2.8"/></svg>,
   // Cloud
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M32 28a6 6 0 00-6-6H14a6 6 0 100 12h12a6 6 0 006-6z"/><path d="M28 16a8 8 0 10-16 0"/></svg>,
+  <svg key="icon-cloud" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M32 28a6 6 0 00-6-6H14a6 6 0 100 12h12a6 6 0 006-6z"/><path d="M28 16a8 8 0 10-16 0"/></svg>,
   // Keyboard
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="14" width="28" height="12" rx="2"/><path d="M10 18h0M14 18h0M18 18h0M22 18h0M26 18h0M30 18h0M10 22h0M14 22h0M18 22h0M22 22h0M26 22h0M30 22h0"/></svg>,
+  <svg key="icon-keyboard" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="14" width="28" height="12" rx="2"/><path d="M10 18h0M14 18h0M18 18h0M22 18h0M26 18h0M30 18h0M10 22h0M14 22h0M18 22h0M22 22h0M26 22h0M30 22h0"/></svg>,
   // Mouse
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="14" y="6" width="12" height="24" rx="6"/><path d="M20 6v6"/></svg>,
+  <svg key="icon-mouse" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="14" y="6" width="12" height="24" rx="6"/><path d="M20 6v6"/></svg>,
   // Chip
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="10" y="10" width="20" height="20" rx="3"/><path d="M4 18h4M4 22h4M32 18h4M32 22h4M18 4v4M22 4v4M18 32v4M22 32v4"/></svg>,
+  <svg key="icon-chip" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="10" y="10" width="20" height="20" rx="3"/><path d="M4 18h4M4 22h4M32 18h4M32 22h4M18 4v4M22 4v4M18 32v4M22 32v4"/></svg>,
   // Terminal
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="8" width="28" height="24" rx="2"/><path d="M12 18l4 4-4 4M20 26h8"/></svg>,
+  <svg key="icon-terminal" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="8" width="28" height="24" rx="2"/><path d="M12 18l4 4-4 4M20 26h8"/></svg>,
   // Network
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="32" cy="8" r="3"/><circle cx="20" cy="28" r="3"/><path d="M9.8 10.2L20 24M30.2 10.2L20 24"/></svg>,
+  <svg key="icon-network" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="32" cy="8" r="3"/><circle cx="20" cy="28" r="3"/><path d="M9.8 10.2L20 24M30.2 10.2L20 24"/></svg>,
   // USB
-  <svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6v12"/><circle cx="20" cy="22" r="2"/><path d="M18 16h4M20 28v6"/></svg>,
+  <svg key="icon-usb" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6v12"/><circle cx="20" cy="22" r="2"/><path d="M18 16h4M20 28v6"/></svg>,
 ];
 
 // ICONS_DATA is generated client-side to avoid SSR/client mismatch
+
+type IconData = {
+  icon: React.ReactElement;
+  color: string;
+  top: number;
+  left: number;
+  size: number;
+  duration: number;
+  delay: number;
+  key: string;
+};
 
 const NeonParallaxBackground = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // generate icons data on client only
-  const [iconsData, setIconsData] = useState<any[] | null>(null);
+  const [iconsData, setIconsData] = useState<IconData[] | null>(null);
   useEffect(() => {
     const ICON_COUNT = 24;
     const data = Array.from({ length: ICON_COUNT }).map((_, i) => {

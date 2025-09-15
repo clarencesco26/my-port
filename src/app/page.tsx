@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import NeonParallaxBackground from '@/components/NeonParallaxBackground';
 import ProjectModal from '@/components/ProjectModal';
 import { TypeAnimation } from 'react-type-animation';
@@ -209,11 +209,7 @@ const PROJECTS = PROJECT_PLACEHOLDERS.map((p, idx) => ({
   link: 'https://example.com',
 }));
 
-const NEON = {
-  primary: "#418BE6",
-  accent: "#E4002B",
-  glow: "0 0 20px"
-};
+// NEON constant removed (unused) to satisfy lint
 
 function RecentProjectsCarousel() {
   const total = PROJECTS.length;
@@ -252,21 +248,7 @@ function RecentProjectsCarousel() {
     };
   }, [isMobile, isPaused, total]);
   // Toggle pause/resume immediately on tap. Arrows/dots will resume autoplay when clicked.
-  const handleTapPause = () => {
-    setIsPaused((prev) => {
-      const next = !prev;
-      if (next) {
-        // paused: clear interval
-        if (autoplayRef.current) {
-          window.clearInterval(autoplayRef.current);
-          autoplayRef.current = null;
-        }
-      } else {
-        // resumed: interval will be set by effect
-      }
-      return next;
-    });
-  };
+  // tap-to-pause behavior removed (not used) to satisfy lint
 
   const openModalAt = (idx: number) => {
     setModalIndex(idx);
@@ -345,7 +327,7 @@ function RecentProjectsCarousel() {
             const lastIdx = grid.length - 1;
             const isBigSpot = idx === 0;
             const isLastSpot = idx === lastIdx;
-            let style: any = {
+            const style: React.CSSProperties = {
               ...g.style,
               transition: 'transform 0.7s cubic-bezier(.7,.2,.2,1), box-shadow 0.7s, border-color 0.3s, box-shadow 0.3s, opacity 0.5s',
               zIndex: isBigSpot ? 3 : 1,
@@ -419,11 +401,7 @@ function RecentProjectsCarousel() {
   );
 }
 
-// helper to map index safely for desktop grid (keeps previous rotation behavior)
-function orderAtIndex(idx: number, total: number) {
-  // simple mapping: use idx (bounded)
-  return idx % total;
-}
+// removed unused helper orderAtIndex to satisfy lint
 
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -539,7 +517,7 @@ export default function Home() {
                    boxShadow: `0 0 30px ${COLORS.primary}22, 0 0 0 1px ${COLORS.primary}33`,
                    boxSizing: 'border-box'
                  }}>
-              <h3 className="text-xl font-semibold mb-1 text-white">Hi There! I'm Clarence Xavier G. Escoto</h3>
+              <h3 className="text-xl font-semibold mb-1 text-white">Hi There! I&apos;m Clarence Xavier G. Escoto</h3>
               <p className="mb-4" style={{ color: COLORS.primary }}>Front-End Developer</p>
               <p className="mb-4 text-[#CCCCCC]" style={{ overflowWrap: 'anywhere', wordBreak: 'break-word' }}>
                 I am a Front-End Developer with a strong focus on building seamless, user-friendly digital experiences. I combine creativity and code to craft interfaces that not only look great but also engage users and leave a lasting impact.
